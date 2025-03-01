@@ -7,3 +7,9 @@ class Player:
 
     def make_move(self, opp_last_moves):
         return strategy_router[self.strategy](opp_last_moves)
+
+    def to_dict(self):
+        return {
+            "strategy": self.strategy,
+            "score": self.score,
+        }

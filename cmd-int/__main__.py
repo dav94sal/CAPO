@@ -21,22 +21,31 @@ def play_round(player1, player2, last_moves):
     last_moves[player2] = move2
 
 def simulate_tournament(players, rounds):
+    # Players should also play a copy of themselves
+    # Repeat process 5 times
+    # Save to database
+
+
     last_moves = {}
-    for _ in range(rounds):
-        for i in range(len(players)):
-            for j in range(i + 1, len(players)):
+    for i in range(len(players)):
+        for j in range(i, len(players)):
+            for _ in range(rounds):
+                # last_moves = None # make db call here
                 play_round(players[i], players[j], last_moves)
-                # print(dict(last_moves))
+                print([move.to_dict() for move in last_moves])
+
+
 
 # Example usage
 players = [
     Player('cooperate'),
     Player('defect'),
     Player('tit-for-tat'),
-    Player('tit-for-two-tats'),
+    # Player('tit-for-two-tats'),
     Player('random')
 ]
 
+# Each match up lasts approx. 200 rounds
 simulate_tournament(players, random.randint(170, 230))
 
 for player in players:
