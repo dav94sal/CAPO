@@ -5,6 +5,7 @@ class Match(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     match_num = db.Column(db.Integer)
+    tournament_num = db.Column(db.Integer, autoincrement=True)
     player1 = db.Column(db.Integer, db.ForeignKey("players.id"))
     player2 = db.Column(db.Integer, db.ForeignKey("players.id"))
 

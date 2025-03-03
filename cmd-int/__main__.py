@@ -1,10 +1,11 @@
 import random
-from player import Player
+from player_class import Player
+from api_calls import add_player, get_all_players
 
 def play_round(player1, player2, last_moves):
     # print(last_moves.get(player2, None))
-    move1 = player1.make_move(last_moves.get(player2, None))
-    move2 = player2.make_move(last_moves)
+    move1 = player1.make_move(last_moves["player2"])
+    move2 = player2.make_move(last_moves["player1"])
     if move1 == 'C' and move2 == 'C':
         player1.score += 3
         player2.score += 3
@@ -17,33 +18,58 @@ def play_round(player1, player2, last_moves):
     elif move1 == 'D' and move2 == 'D':
         player1.score += 1
         player2.score += 1
-    last_moves[player1] = move1
-    last_moves[player2] = move2
+    last_moves["player1"].append(move1)
+    last_moves["player2"].append(move2)
 
 def simulate_tournament(players, rounds):
-    # Players should also play a copy of themselves
-    # Repeat process 5 times
-    # Save to database
+    last_moves = {
+        "player1": [],
+        "player2": [],
+    }
+
+    # Repeat tournament 5 times
+    match_num = 1
+
+    while match_num <= 5:
+        for i in range(len(players)):
+            # Players should play a copy of themselves
+            for j in range(i, len(players)):
+                player1 = players[i]
+                player2 = players[j]
+                # Each match is n rounds
+                for _ in range(rounds):
+                    play_round(player1, player2, last_moves)
+                    # print([move.to_dict() for move in last_moves])
+                # make db call here after each match
+                db_match = {
+                    match_num,
+                    player1,
+                    player2,
+                }
+        match_num += 1
 
 
-    last_moves = {}
-    for i in range(len(players)):
-        for j in range(i, len(players)):
-            for _ in range(rounds):
-                # last_moves = None # make db call here
-                play_round(players[i], players[j], last_moves)
-                print([move.to_dict() for move in last_moves])
-
-
-
-# Example usage
+# create players
 players = [
     Player('cooperate'),
     Player('defect'),
     Player('tit-for-tat'),
-    # Player('tit-for-two-tats'),
+    Player('tit-for-two-tats'),
     Player('random')
 ]
+
+# get all players in database
+current_players = get_all_players()
+
+# loop through players:
+    # if players do not exist in database:
+        # make a fetch call to create a new player
+    # save player ids
+
+for player in players:
+    # if player not in db
+        # post new player
+    pass
 
 # Each match up lasts approx. 200 rounds
 simulate_tournament(players, random.randint(170, 230))
