@@ -22,6 +22,10 @@ app.register_blueprint(api_router, url_prefix="/api")
 def index():
     return "<h1>Hello World!</h1>"
 
+@app.errorhandler(404)
+def not_found(e):
+    return "<h1>Something went wrong...</h1>"
+
 # @app.errorhandler(404)
 # def not_found(e):
 #     return app.send_static_file('index.html')

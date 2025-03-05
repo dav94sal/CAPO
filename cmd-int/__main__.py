@@ -61,15 +61,21 @@ players = [
 # get all players in database
 current_players = get_all_players()
 
-# loop through players:
-    # if players do not exist in database:
-        # make a fetch call to create a new player
-    # save player ids
+# Flatten data
+hash_curr_player = {}
+if current_players:
+    for player in current_players:
+        hash_curr_player[player["strategy"]] = player
 
+
+# Check database for existing players
 for player in players:
-    # if player not in db
-        # post new player
-    pass
+    # if player does not exist in database:
+    if not current_players or not hash_curr_player[player.strategy]:
+        # make a fetch call to create a new player
+        new_player = add_player({
+            "strategy": player.strategy
+        })
 
 # Each match up lasts approx. 200 rounds
 simulate_tournament(players, random.randint(170, 230))
