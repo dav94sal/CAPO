@@ -1,6 +1,8 @@
 import random
 from player_class import Player
-from api_calls import add_player, get_all_players
+from api_calls import add_player, get_all_players, new_match
+
+tournament_num = 1
 
 def play_round(player1, player2, last_moves):
     # print(last_moves.get(player2, None))
@@ -21,6 +23,7 @@ def play_round(player1, player2, last_moves):
     last_moves["player1"].append(move1)
     last_moves["player2"].append(move2)
 
+
 def simulate_tournament(players, rounds):
     last_moves = {
         "player1": [],
@@ -36,6 +39,18 @@ def simulate_tournament(players, rounds):
             for j in range(i, len(players)):
                 player1 = players[i]
                 player2 = players[j]
+
+                # Get player ids
+                flat_players = { player["strategy"]: player["id"] for player in current_players }
+
+                curr_match = new_match({
+                    "match_num": match_num,
+                    "tournament_num": tournament_num,
+                    "player1": flat_players[player1.strategy],
+                    "player2": flat_players[player2.strategy],
+                })
+                # print(curr_match)
+
                 # Each match is n rounds
                 for _ in range(rounds):
                     play_round(player1, player2, last_moves)
@@ -76,6 +91,7 @@ for player in players:
         new_player = add_player({
             "strategy": player.strategy
         })
+        current_players.append(new_player)
 
 # Each match up lasts approx. 200 rounds
 simulate_tournament(players, random.randint(170, 230))
