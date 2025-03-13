@@ -9,4 +9,4 @@ class Round(db.Model):
     move2 = db.Column(db.String(1), nullable=False)
     match_id = db.Column(db.Integer, db.ForeignKey("matches.id"), nullable=False)
 
-    match = db.relationship("Match")
+    match = db.relationship("Match", overlaps="rounds")

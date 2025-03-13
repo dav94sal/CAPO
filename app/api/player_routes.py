@@ -5,18 +5,18 @@ from ..models import Player, db
 players_bp = Blueprint("players", __name__)
 
 
-# GET two players
-@players_bp.route('/<int:player1_id>/<int:player2_id>')
-def get_two_players(player1_id, player2_id):
-    player1 = Player.query.get(player1_id)
-    player2 = Player.query.get(player2_id)
-    
+# # GET two players
+# @players_bp.route('/<int:player1_id>/<int:player2_id>')
+# def get_two_players(player1_id, player2_id):
+#     player1 = Player.query.get(player1_id)
+#     player2 = Player.query.get(player2_id)
+
 
 # GET all players
 @players_bp.route('/all')
 def all_players():
     players = Player.query.all()
-    # print(players)
+    print(players)
     return [player.to_dict() for player in players]
 
 

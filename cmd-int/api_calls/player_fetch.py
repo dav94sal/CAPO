@@ -36,4 +36,4 @@ def add_player(player):
     else:
         print(f"Error: {response.status_code}")
 
-    return response
+    return response.json()

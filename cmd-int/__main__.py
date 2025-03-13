@@ -1,8 +1,9 @@
 import random
 from player_class import Player
-from api_calls import add_player, get_all_players, new_match
+from api_calls import add_player, get_all_players, new_match, get_tourny_num
 
-tournament_num = 1
+tournament_num = get_tourny_num() or 1
+print("Tournament num: ", tournament_num)
 
 def play_round(player1, player2, last_moves):
     # print(last_moves.get(player2, None))
@@ -56,11 +57,11 @@ def simulate_tournament(players, rounds):
                     play_round(player1, player2, last_moves)
                     # print([move.to_dict() for move in last_moves])
                 # make db call here after each match
-                db_match = {
-                    match_num,
-                    player1,
-                    player2,
-                }
+                # db_match = {
+                #     match_num,
+                #     player1,
+                #     player2,
+                # }
         match_num += 1
 
 
@@ -75,6 +76,7 @@ players = [
 
 # get all players in database
 current_players = get_all_players()
+# print("current players: ", current_players)
 
 # Flatten data
 hash_curr_player = {}
@@ -86,7 +88,7 @@ if current_players:
 # Check database for existing players
 for player in players:
     # if player does not exist in database:
-    if not current_players or not hash_curr_player[player.strategy]:
+    if not current_players or player.strategy not in hash_curr_player:
         # make a fetch call to create a new player
         new_player = add_player({
             "strategy": player.strategy
