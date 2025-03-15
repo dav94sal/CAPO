@@ -5,13 +5,6 @@ from ..models import Player, db
 players_bp = Blueprint("players", __name__)
 
 
-# # GET two players
-# @players_bp.route('/<int:player1_id>/<int:player2_id>')
-# def get_two_players(player1_id, player2_id):
-#     player1 = Player.query.get(player1_id)
-#     player2 = Player.query.get(player2_id)
-
-
 # GET all players
 @players_bp.route('/all')
 def all_players():
@@ -31,3 +24,17 @@ def new_player():
     db.session.commit()
     return player.to_dict()
     # return form.errors, 401
+
+
+# DELETE
+# # One player
+@players_bp.route('/delete/<int:player_id>', methods=["DELETE"])
+def delete_one(player_id):
+    player = Player.query.get(player_id)
+
+    if player:
+        db.session.delete(player)
+        db.session.commit()
+        return {"message": "Successfully Deleted"}
+    else:
+        return {"message": "Player Not Found"}, 404

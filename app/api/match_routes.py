@@ -28,20 +28,36 @@ def new_match():
     db.session.commit()
     return new_match.to_dict()
 
-# # DELETE
-# # by tournament num
-# @match_bp.route('/delete_batch/<int:tourny_num>')
-# def delete_batch(tourny_num):
-#     pass
+# DELETE
+# by tournament num
+@match_bp.route('/delete_batch/<int:tourny_num>', methods=["delete"])
+def delete_batch(tourny_num):
+    matches = Match.query.filter_by(tournament_num=tourny_num).all()
+    print(matches)
+
+    if matches:
+        for match in matches:
+            db.session.delete(match)
+
+        db.session.commit()
+        return {"message": "Successfully Deleted"}
+    else:
+        return {"message": "Tournament Not Found"}, 404
 
 
 # # single match by id
-# @match_bp.route('/delete_batch/<int:tourny_num>')
-# def delete_batch(tourny_num):
+# @match_bp.route('/delete_one/<int:match_id>')
+# def delete_one(match_id):
 #     pass
 
 
-# # purge all
-# @match_bp.route('/delete_all')
-# def delete_all():
-#     pass
+# purge all
+@match_bp.route('/delete_all', methods=["DELETE"])
+def delete_all():
+    matches = Match.query.all()
+
+    for match in matches:
+        db.session.delete(match)
+
+    db.session.commit()
+    return {"message": "Successfully Deleted"}
