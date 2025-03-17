@@ -8,10 +8,12 @@ match_bp = Blueprint("matches", __name__)
 @match_bp.route('/last_tournament')
 def last_tournament():
     matches = Match.query.all()
-    # matches.sort(lambda match: match.createdAt)
-    print(matches[-1].to_dict()["tournament_num"])
+    if matches:
+        # print(matches[-1].to_dict()["tournament_num"])
 
-    return matches[-1].to_dict()
+        return matches[-1].to_dict()
+    else:
+        return {"message": "No matches"}, 404
 
 
 # POST new match
@@ -27,6 +29,7 @@ def new_match():
     db.session.add(new_match)
     db.session.commit()
     return new_match.to_dict()
+
 
 # DELETE
 # by tournament num

@@ -19,7 +19,7 @@ def new_match(match):
 
     if response.status_code < 400:
         # print("Match created successfully.")
-        pass
+        return response.json()
     else:
         print(f"Error: {response.status_code}")
 

@@ -1,14 +1,19 @@
 import random
 from player_class import Player
-from api_calls import add_player, get_all_players, new_match, get_tourny_num
+from api_calls import add_player, get_all_players, new_match, get_tourny_num, new_round
 
 tournament_num = get_tourny_num() or 1
 print("Tournament num: ", tournament_num)
 
 def play_round(player1, player2, last_moves):
-    # print(last_moves.get(player2, None))
     move1 = player1.make_move(last_moves["player2"])
     move2 = player2.make_move(last_moves["player1"])
+
+    curr_round = {
+        "move1": move1,
+        "move2": move2
+    }
+
     if move1 == 'C' and move2 == 'C':
         player1.score += 3
         player2.score += 3
@@ -23,6 +28,8 @@ def play_round(player1, player2, last_moves):
         player2.score += 1
     last_moves["player1"].append(move1)
     last_moves["player2"].append(move2)
+
+    return curr_round
 
 
 def simulate_tournament(players, rounds):
@@ -53,15 +60,13 @@ def simulate_tournament(players, rounds):
                 # print(curr_match)
 
                 # Each match is n rounds
-                for _ in range(rounds):
-                    play_round(player1, player2, last_moves)
-                    # print([move.to_dict() for move in last_moves])
-                # make db call here after each match
-                # db_match = {
-                #     match_num,
-                #     player1,
-                #     player2,
-                # }
+                # Needs optimization
+                for round in range(rounds):
+                    curr_round = play_round(player1, player2, last_moves)
+                    curr_round["round"] = round
+                    curr_round["match_id"] = curr_match["id"]
+                    new_round(curr_round)
+
         match_num += 1
 
 

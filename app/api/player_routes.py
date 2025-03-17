@@ -9,7 +9,7 @@ players_bp = Blueprint("players", __name__)
 @players_bp.route('/all')
 def all_players():
     players = Player.query.all()
-    print(players)
+    # print(players)
     return [player.to_dict() for player in players]
 
 

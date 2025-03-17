@@ -10,3 +10,12 @@ class Round(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey("matches.id"), nullable=False)
 
     match = db.relationship("Match", overlaps="rounds")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "round": self.round,
+            "move1": self.move1,
+            "move2": self.move2,
+            "match_id": self.match_id,
+        }
