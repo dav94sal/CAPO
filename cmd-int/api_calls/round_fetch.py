@@ -15,7 +15,7 @@ def get_rounds(match_id):
     return response
 
 
-def new_round(round):
+def match_rounds(round):
     url = "http://localhost:5000/api/rounds/new"
 
     response = requests.post(url, json=round)

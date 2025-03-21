@@ -1,6 +1,6 @@
 import random
 from player_class import Player
-from api_calls import add_player, get_all_players, new_match, get_tourny_num, new_round
+from api_calls import add_player, get_all_players, new_match, get_tourny_num, match_rounds
 
 tournament_num = get_tourny_num() or 1
 print("Tournament num: ", tournament_num)
@@ -59,18 +59,23 @@ def simulate_tournament(players, rounds):
                 })
                 # print(curr_match)
 
+                new_rounds = {}
+
                 # Each match is n rounds
-                # Needs optimization
+                # Optimization: Group rounds by match, send in batches to backend
                 for round in range(rounds):
                     curr_round = play_round(player1, player2, last_moves)
                     curr_round["round"] = round
                     curr_round["match_id"] = curr_match["id"]
-                    new_round(curr_round)
+                    new_rounds[round] = curr_round
+
+                match_rounds(new_rounds)
 
         match_num += 1
 
 
 # create players
+# def handle_players()
 players = [
     Player('cooperate'),
     Player('defect'),
