@@ -1,6 +1,7 @@
 import random
-from player_class import Player
-from api_calls import add_player, get_all_players, new_match, get_tourny_num, match_rounds
+from player_data import Player
+from api_calls import new_match, get_tourny_num, match_rounds, handle_players, get_all_players
+from strategies import strategy_router
 
 tournament_num = get_tourny_num() or 1
 print("Tournament num: ", tournament_num)
@@ -38,9 +39,9 @@ def simulate_tournament(players, rounds):
         "player2": [],
     }
 
-    # Repeat tournament 5 times
     match_num = 1
 
+    # Repeat tournament 5 times
     while match_num <= 5:
         for i in range(len(players)):
             # Players should play a copy of themselves
@@ -49,7 +50,7 @@ def simulate_tournament(players, rounds):
                 player2 = players[j]
 
                 # Get player ids
-                flat_players = { player["strategy"]: player["id"] for player in current_players }
+                flat_players = { player["strategy"]: player["id"] for player in db_players }
 
                 curr_match = new_match({
                     "match_num": match_num,
@@ -75,35 +76,12 @@ def simulate_tournament(players, rounds):
 
 
 # create players
-# def handle_players()
-players = [
-    Player('cooperate'),
-    Player('defect'),
-    Player('tit-for-tat'),
-    Player('tit-for-two-tats'),
-    Player('random')
-]
-
 # get all players in database
-current_players = get_all_players()
-# print("current players: ", current_players)
+db_players = get_all_players()
+players = [Player(strat) for strat in strategy_router]
 
-# Flatten data
-hash_curr_player = {}
-if current_players:
-    for player in current_players:
-        hash_curr_player[player["strategy"]] = player
-
-
-# Check database for existing players
-for player in players:
-    # if player does not exist in database:
-    if not current_players or player.strategy not in hash_curr_player:
-        # make a fetch call to create a new player
-        new_player = add_player({
-            "strategy": player.strategy
-        })
-        current_players.append(new_player)
+# Add players to database
+db_players = handle_players(players, db_players)
 
 # Each match up lasts approx. 200 rounds
 simulate_tournament(players, random.randint(170, 230))

@@ -43,6 +43,7 @@ def new_round():
     return new_round.to_dict()
 
 
+# Delete all rounds
 @round_bp.route('/delete_all', methods=["DELETE"])
 def delete_all():
     all_rounds = Round.query.all()
